@@ -217,9 +217,9 @@
           let objTypePhone = dataPhoneType.data.phones;
           let result = objTypePhone.find( ({ phone_name }) => phone_name === searchTypePhone.value );
           // let result = objTypePhone.slice(0, 4)// fitur jika yg diisi brand saja
-          let urlTypePhone = result.detail;
-
-          fetch(urlTypePhone)
+          let updatedURL = result.detail.replace(/^http:\/\//i, 'https://');
+          
+          fetch(updatedURL)
           .then(res => res.json())
           .then(function(data){
             // console.log(data)
