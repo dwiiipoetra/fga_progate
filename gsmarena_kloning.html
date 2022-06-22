@@ -11,7 +11,7 @@
       }
     </style>
   </head>
-  <body onload="loadBrands()">
+  <body>
     <div id="modalContainer"></div>
     
     <div class="container">
@@ -24,23 +24,23 @@
 
       <div class="row justify-content-center">
         <div class="col-2">
-          <img src="./logo/samsung.png" class="img-thumbnail" alt="samsung">
+          <img src="logo/samsung.png" class="img-thumbnail" alt="samsung">
         </div>
         
         <div class="col-2">
-          <img src="./logo/xiaomi.png" class="img-thumbnail" alt="xiaomi">
+          <img src="logo/xiaomi.png" class="img-thumbnail" alt="xiaomi">
         </div>
         
         <div class="col-2">
-          <img src="./logo/oppo.jpg" class="img-thumbnail" alt="oppo">
+          <img src="logo/oppo.jpg" class="img-thumbnail" alt="oppo">
         </div>
         
         <div class="col-2">
-          <img src="./logo/asus.png" class="img-thumbnail" alt="asus">
+          <img src="logo/asus.png" class="img-thumbnail" alt="asus">
         </div>
         
         <div class="col-2">
-          <img src="./logo/apple.png" class="img-thumbnail" alt="apple">
+          <img src="logo/apple.png" class="img-thumbnail" alt="apple">
         </div>
       </div>
 
@@ -78,22 +78,47 @@
         let modalContainer = document.getElementById("modalContainer");
         let listContainer = document.getElementById("listContainer");
         
-        function loadBrands(){
-          let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
+        //load brands
+        let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
 
-          fetch(url_brands)
-            .then(res => res.json())
-            .then((data) => {
-              const objBrand = data.data;
-              for(let i=0; i<=10; i++){
-                let opt = document.createElement('option');
-                opt.value = objBrand[i].brand_name;
-                opt.innerHTML = objBrand[i].brand_name;
-                searchBrand.appendChild(opt);
-              }
-            })
-            .catch(err => console.log(err))
-        }
+        const promiseData = fetch(url_brands).then(res => res.json()).then((data) => {
+            const objBrand = data.data;
+            return objBrand;
+          });
+          window.onload = async () => {
+            let objBrandData = await promiseData;
+            // console.log(objBrandData)
+            for(let i=0; i<=10; i++){
+              let opt = document.createElement('option');
+              opt.value = objBrandData[i].brand_name;
+              opt.innerHTML = objBrandData[i].brand_name;
+              searchBrand.appendChild(opt);
+            }
+          };
+
+          // fetch(url_brands)
+          //   .then(res => res.json())
+          //   .then((data) => {
+          //     const objBrand = data.data;
+          //     for(let i=0; i<=10; i++){
+          //       let opt = document.createElement('option');
+          //       opt.value = objBrand[i].brand_name;
+          //       opt.innerHTML = objBrand[i].brand_name;
+          //       searchBrand.appendChild(opt);
+          //     }
+          //   })
+          //   .catch(err => console.log(err))
+
+
+            // const promiseOfSomeData = fetch("some.json").then(r=>r.json()).then(data => {
+            //     console.log('in async');
+            //     return data;
+            // });
+            // window.onload = async () => {
+            //     let someData = await promiseOfSomeJsonData;
+            //     console.log("onload");
+            // };
+        
 
         //load type phones
         searchBrand.addEventListener("change", (event) => {
