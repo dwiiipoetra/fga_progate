@@ -81,8 +81,8 @@
         //load brands
         let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
 
-        const promiseData = fetch(url_brands).then(res => res.json()).then((data) => {
-            const objBrand = data.data;
+        let promiseData = fetch(url_brands).then(res => res.json()).then((data) => {
+            let objBrand = data.data;
             return objBrand;
           });
           window.onload = async () => {
