@@ -123,7 +123,7 @@
         //load type phones
         searchBrand.addEventListener("change", (event) => {
           // alert(event.target.value)//value dari select
-          let url_brands = 'https://api-mobilespecs.azharimm.site/v2/brands';
+          let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
 
           fetch(url_brands)
             .then(res => res.json())
@@ -135,6 +135,11 @@
               .then(res => res.json())
               .then((data) => {
                 let objTypePhone = data.data.phones;
+                
+                //sebelum diappend ke select type, clear dulu select type
+                searchTypePhone.value = "";
+                searchTypePhone.innerHTML = "";
+
                 for(let i=0; i<=4; i++){
                   let opt = document.createElement('option');
                   opt.value = objTypePhone[i].phone_name;
@@ -176,7 +181,7 @@
         }
 
         function getBrand(){
-          let url_brands = 'https://api-mobilespecs.azharimm.site/v2/brands';
+          let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
             fetch(url_brands)
             .then(res => res.json())
             .then((data) => {
@@ -268,10 +273,6 @@
   
             //append listSearch ke listContainer
             listContainer.append(listSearch);
-
-            //clear text type phone
-            searchTypePhone.value = "";
-            searchTypePhone.innerHTML = "";
           }
         }
     </script>
