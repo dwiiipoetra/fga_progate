@@ -123,7 +123,7 @@
         //load type phones
         searchBrand.addEventListener("change", (event) => {
           // alert(event.target.value)//value dari select
-          let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
+          let url_brands = 'https://api-mobilespecs.azharimm.site/v2/brands';
 
           fetch(url_brands)
             .then(res => res.json())
@@ -181,7 +181,7 @@
         }
 
         function getBrand(){
-          let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
+          let url_brands = 'https://api-mobilespecs.azharimm.site/v2/brands';
             fetch(url_brands)
             .then(res => res.json())
             .then((data) => {
