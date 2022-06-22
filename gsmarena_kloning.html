@@ -133,7 +133,6 @@
               
               // update url http => https
               let updatedURL = result.detail.replace(/^http:\/\//i, 'https://');
-              console.log(updatedURL)
               
               fetch(updatedURL)
               .then(res => res.json())
@@ -201,9 +200,11 @@
         
         function getURLPhone(dataBrand){
           let idPhone = dataBrand.brand_id;
-          let urlPhone = dataBrand.detail;
           
-          fetch(urlPhone)
+          // update url http => https
+          let updatedURL = dataBrand.detail.replace(/^http:\/\//i, 'https://');
+          
+          fetch(updatedURL)
           .then(res => res.json())
           .then(function(data){
             console.log(data)
