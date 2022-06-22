@@ -130,8 +130,12 @@
             .then((data) => {
               let objBrand = data.data;
               let result = objBrand.find( ({ brand_name }) => brand_name === event.target.value );
-              // console.log(result.detail)
-              fetch(result.detail)
+              
+              // update url http => https
+              let updatedURL = result.detail.replace(/^http:\/\//i, 'https://');
+              console.log(updatedURL)
+              
+              fetch(updatedURL)
               .then(res => res.json())
               .then((data) => {
                 let objTypePhone = data.data.phones;
