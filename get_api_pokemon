@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Get API Pokemon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+      #btnAPI{
+        margin: 20px 0;
+      }
+
+      .card-img-top{
+        width: 100px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .card-header, .card-title{
+        text-transform: capitalize;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-md">
+        <div class="jumbotron">
+          <h1 class="display-4">Get API Pokemon</h1>
+          <p class="lead">FGA DTS - JS API Kelas B - Dwi Waluyo Putranto</p>
+          <hr class="my-4">
+          
+          <div class="row g-2">
+            <div class="col-md">
+              <button type="button" id="btnAPI" class="btn btn-primary btn-lg">Get API</button>
+            </div>
+          </div>
+
+          <div class="row" id="container-card"></div>
+        </div>
+    </div>
+    <script>
+    // tambah event klik
+    let btnAPI = document.getElementById("btnAPI");
+    btnAPI.addEventListener("click", fetchPokemon);
+    
+    function fetchPokemon(){
+      fetch('https://pokeapi.co/api/v2/pokemon?limit=30')
+      .then(res => res.json())
+      .then((data) => {
+          data.results.forEach((pokemon) => { fetchPokemonData(pokemon) });
+      })
+      .catch(err => console.log(err));
+    }
+
+    function fetchPokemonData(pokemon){
+      let url = pokemon.url // <--- this is saving the pokemon url to a variable to us in a fetch.(Ex: https://pokeapi.co/api/v2/pokemon/1/)
+      fetch(url)
+      .then(res => res.json())
+      .then(function(pokeData){
+        renderPokemon(pokeData);
+      })
+    }
+
+    function renderPokemon(pokeData){
+      let row = document.getElementById("container-card");
+      let pokemonType = pokeData.types[0].type.name;
+      let bgType = "", txtType = "";
+      
+      switch(pokemonType){
+        case "grass":{ bgType = 'bg-success'; break; }
+        case "fire":{ bgType = 'bg-warning'; break; }
+        case "water":{ bgType = 'bg-primary'; break; }
+        case "bug":{ bgType = 'bg-secondary'; break; }
+        case "normal":{ bgType = 'bg-light'; break; }
+        default: { bgType = 'bg-danger'; break; }
+      }
+
+      txtType = (bgType === 'bg-light') ? '' : 'text-white';
+
+      // buat element div sebagai induk komponen
+      let div = document.createElement('div');
+
+      // tambah attr class
+      div.classList.add('col-sm-2');
+
+      // memasukkan html tag ke dalam card
+      let card = "";
+      card += "<div class='"+ txtType +" card mb-3 "+ bgType +"'>";
+      card += "<div class=card-header>Tipe: "+ pokemonType +"</div>";
+      card += "<img class=card-img-top src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+ pokeData.id +".png'>";
+      card += "<div class=card-body>";
+      card += "<h5 class=card-title>"+ pokeData.name +"</h5>";
+      card += "<p class=card-text>";
+      card += "<small>Height: "+(pokeData.height/10)+" m</small><br>";
+      card += "<small>Weight: "+(pokeData.weight/10)+" kgs</small>";
+      card += "</p>";
+      card += "<a href=# class='btn btn-outline-light'>"+ pokeData.id +"</a>";
+      card += "</div></div>";
+
+      // memasukkan card ke dalam div induk
+      div.innerHTML = card;
+      // menambahkan div induk ke dalam variabel row
+      row.appendChild(div);
+
+      btnAPI.setAttribute("disabled","disabled");
+    }
+    </script>
+</body>
+</html>
