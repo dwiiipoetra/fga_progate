@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DW Phone Specifications</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+      .listSearch{
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body onload="loadBrands()">
+    <div id="modalContainer"></div>
+    
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-6">
+          <h1 class="display-4">DW<small class="text-muted"> Phone Specifications</small></h1>
+          <p class="lead">FGA DTS - JS API Kelas B - Dwi Waluyo Putranto</p>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-2">
+          <img src="logo/samsung.png" class="img-thumbnail" alt="samsung">
+        </div>
+        
+        <div class="col-2">
+          <img src="logo/xiaomi.png" class="img-thumbnail" alt="xiaomi">
+        </div>
+        
+        <div class="col-2">
+          <img src="logo/oppo.jpg" class="img-thumbnail" alt="oppo">
+        </div>
+        
+        <div class="col-2">
+          <img src="logo/asus.png" class="img-thumbnail" alt="asus">
+        </div>
+        
+        <div class="col-2">
+          <img src="logo/apple.png" class="img-thumbnail" alt="apple">
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-7" style="margin:20px 0;">
+          <div class="input-group input-group-lg">
+            <select id="searchBrand" class="form-select">
+              <option selected>Select Brand</option>
+            </select>
+            <select id="searchTypePhone" class="form-select">
+              <option selected>Select Type</option>
+            </select>
+            <!-- <input type="text" id="searchBrand" class="form-control" placeholder="Apple" value="Apple"> -->
+            <!-- <input type="text" id="searchTypePhone" class="form-control" placeholder="iPhone 12" value="iPhone 12"> -->
+            <button type="button" id="btnSearch" class="btn btn-primary btn-lg">Find my phone</button>
+          </div>
+        </div>
+
+        <div class="col-1" style="margin:20px 0;">
+          <button type="button" id="btnReset" class="btn btn-success btn-lg">Reset</button>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div id="listContainer" class="col-8"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script>
+        let btnSearch = document.getElementById("btnSearch");
+        let btnReset = document.getElementById("btnReset");
+        let searchBrand = document.getElementById("searchBrand");
+        let searchTypePhone = document.getElementById("searchTypePhone");
+        let modalContainer = document.getElementById("modalContainer");
+        let listContainer = document.getElementById("listContainer");
+        
+        function loadBrands(){
+          let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
+
+          fetch(url_brands)
+            .then(res => res.json())
+            .then((data) => {
+              const objBrand = data.data;
+              for(let i=0; i<=10; i++){
+                let opt = document.createElement('option');
+                opt.value = objBrand[i].brand_name;
+                opt.innerHTML = objBrand[i].brand_name;
+                searchBrand.appendChild(opt);
+              }
+            })
+            .catch(err => console.log(err))
+        }
+
+        //load type phones
+        searchBrand.addEventListener("change", (event) => {
+          // alert(event.target.value)//value dari select
+          let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
+
+          fetch(url_brands)
+            .then(res => res.json())
+            .then((data) => {
+              let objBrand = data.data;
+              let result = objBrand.find( ({ brand_name }) => brand_name === event.target.value );
+              // console.log(result.detail)
+              fetch(result.detail)
+              .then(res => res.json())
+              .then((data) => {
+                let objTypePhone = data.data.phones;
+                for(let i=0; i<=4; i++){
+                  let opt = document.createElement('option');
+                  opt.value = objTypePhone[i].phone_name;
+                  opt.innerHTML = objTypePhone[i].phone_name;
+                  searchTypePhone.appendChild(opt);
+                }
+                // console.log(objTypePhone)
+              })
+              .catch(err => console.log(err))
+          })
+          .catch(err => console.log(err))
+        });
+        
+        //reset click
+        btnReset.addEventListener("click", resetModalAndList);
+        //search click
+        btnSearch.addEventListener("click", checkSearch);
+
+        function resetModalAndList(){
+          let modal = document.querySelector(".modal");
+          let list = document.querySelector(".btn-secondary");
+          modal.remove();//remove modal
+          list.remove();//remove list
+        }
+
+        function checkSearch(){
+          if(searchBrand.value === "" && searchTypePhone.value !== ""){//ketika brand dikosongi maka tidak valid
+            alert("Please Fill the Brand");
+            return false;
+          }else if(searchBrand.value !== "" && searchTypePhone.value === ""){//ketika type dikosongi maka tidak valid
+            alert("Please Fill the Type");
+            return false;
+          }else if(searchBrand.value === "" && searchTypePhone.value === ""){// ketika semua dikosongi maka tidak valid
+            alert("Please Fill the Brand or Type Phone");
+            return false;
+          }else{
+            getBrand();
+          }
+        }
+
+        function getBrand(){
+          let url_brands = 'http://api-mobilespecs.azharimm.site/v2/brands';
+            fetch(url_brands)
+            .then(res => res.json())
+            .then((data) => {
+              const objBrand = data.data;
+              // console.log(objBrand)
+              let result = objBrand.find( ({ brand_name }) => brand_name === searchBrand.value );
+
+              //panggil fungsi getURLPhone
+              getURLPhone(result);
+            })
+            .catch(err => console.log(err))
+        }
+        
+        function getURLPhone(dataBrand){
+          let idPhone = dataBrand.brand_id;
+          let urlPhone = dataBrand.detail;
+          
+          fetch(urlPhone)
+          .then(res => res.json())
+          .then(function(data){
+            console.log(data)
+            getURLPhoneDetails(data, idPhone);
+          })
+          .catch(err => console.log(err))
+        }
+
+        function getURLPhoneDetails(dataPhoneType, idPhone){
+          let objTypePhone = dataPhoneType.data.phones;
+          let result = objTypePhone.find( ({ phone_name }) => phone_name === searchTypePhone.value );
+          // let result = objTypePhone.slice(0, 4)// fitur jika yg diisi brand saja
+          let urlTypePhone = result.detail;
+
+          fetch(urlTypePhone)
+          .then(res => res.json())
+          .then(function(data){
+            // console.log(data)
+            renderListSearch(data, idPhone);
+          })
+          .catch(err => console.log(err))
+        }
+
+        function renderListSearch(dataPhoneDetail, idPhone){
+          let dataPhoneDetails = dataPhoneDetail.data; 
+
+          //cek apakah element modal & listSearch belum ada? jika null maka buat komponennya
+          if(document.querySelector('.modal') === null && document.querySelector('.btn-secondary') === null){
+            //render modal
+            // buat element modal sebagai induk komponen
+            let div = document.createElement('div');
+            
+            // tambah attr class
+            div.classList.add('modal');
+            div.setAttribute("tabindex",-1);
+            div.setAttribute("id","myModal"+idPhone);
+            
+            let modal = "";
+            modal += "<div class='modal-dialog .modal-dialog-scrollable'>";
+              modal += "<div class=modal-content>";
+                modal += "<div class='modal-header text-white bg-secondary'>";
+                  modal += "<h5 class='modal-title'>"+ dataPhoneDetails.brand +" "+ dataPhoneDetails.phone_name +"</h5>";
+                  modal += "<button type=button class=btn-close data-bs-dismiss=modal aria-label=Close></button>";
+                modal += "</div>";
+                modal += "<div class=modal-body>";
+                  modal += "<div class=container-fluid>";
+                    modal += "<div class=row><div class=col>Tanggal Rilis</div><div class=col><i>"+dataPhoneDetails.release_date+"</i></div></div>";
+                    modal += "<div class=row><div class=col>Dimensi</div><div class=col>"+dataPhoneDetails.dimension+"</div></div>";
+                    modal += "<div class=row><div class=col>OS</div><div class=col>"+dataPhoneDetails.os+"</div></div>";
+                    modal += "<div class=row><div class=col>Storage</div><div class=col>"+dataPhoneDetails.storage+"</div></div>";
+                    modal += "<div class=row><div class=col><img src="+dataPhoneDetails.thumbnail+" width=150 height=200></div></div>";
+                  modal += "</div>";
+                modal += "</div>";
+                modal += "<div class=modal-footer><button type=button class=btn btn-secondary data-bs-dismiss=modal>Close</button></div>";
+              modal += "</div>";
+            modal+= "</div>";
+            
+            // memasukkan modal ke dalam div
+            div.innerHTML = modal;
+            
+            // menambahkan div induk ke dalam variabel modalContainer
+            modalContainer.appendChild(div);
+  
+            // render listSearch
+            // set attribute modal
+            let listSearch = document.createElement('a');
+            listSearch.classList.add("btn","btn-secondary");
+            listSearch.setAttribute("data-bs-toggle", "modal");
+            listSearch.setAttribute("href", "#myModal" + idPhone);
+            listSearch.innerHTML = dataPhoneDetail.data.phone_name;
+  
+            //append listSearch ke listContainer
+            listContainer.append(listSearch);
+
+            //clear text type phone
+            searchTypePhone.value = "";
+            searchTypePhone.innerHTML = "";
+          }
+        }
+    </script>
+</body>
+</html>
