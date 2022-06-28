@@ -1,5 +1,5 @@
 <div align="left">
-  <h3>Link Projects</h1>  
+  <h4>Link Projects</h4>  
   <p>
       <a href="https://dwiiipoetra.github.io/fga_progate/fizzbuzz_new.html">FizzBuzz New</a>
     <span> · </span>
