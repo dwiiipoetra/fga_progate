@@ -1,7 +1,7 @@
 <div align="left">
   <h4>About Projects</h4>
   <p>
-    Here are some of the assignments I worked on FizzBuzz logic, Get API Pokemon, Clone GSM Arena in the JavaScript with API class held by FGA DTS Kominfo.
+    Here are some of the assignments I worked on FizzBuzz, Get API Pokemon, Clone GSM Arena in the JavaScript with API class held by FGA DTS Kominfo.
   </p>
   
   <h4>Link Projects</h4>  
